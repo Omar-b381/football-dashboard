@@ -1,11 +1,12 @@
-# Football Dashboard Project
+# ⚽ Football Analytics Dashboard
 
-## Description
-Simple Streamlit dashboard for one match analysis.
+## 📌 تعليمات التشغيل
+1. تثبيت المكتبات:
+   `pip install -r requirements.txt`
+2. تشغيل التطبيق:
+   `streamlit run app.py`
 
-## Rules
-- No logic in app.py
-- All work in utils.py
-
-## Run
-streamlit run app.py
+## ⚠️ قواعد العمل للفريق
+- ممنوع كتابة أي أوامر تخص `streamlit` داخل `utils.py`.
+- جميع الرسوميات يجب أن تستقبل `DataFrame` وترجع `Figure`.
+- الاعتماد الكلي على أسماء الأعمدة من ملف `config.py` فقط.
