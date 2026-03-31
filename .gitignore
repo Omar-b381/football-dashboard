@@ -4,5 +4,4 @@ __pycache__/
 .vscode/
 .streamlit/
 *.csv
-*.xlsx
 venv/
