@@ -1,6 +1,7 @@
 import streamlit as st
 import config
 import utils
+import os
 
 st.set_page_config(
     page_title=config.PAGE_TITLE,
@@ -11,18 +12,30 @@ st.set_page_config(
 st.title(f"{config.PAGE_ICON} {config.PAGE_TITLE}")
 
 # =========================================================
-# LOAD DATA
+# LOAD DATA (تم التعديل للقراءة المباشرة مع التخزين المؤقت)
 # =========================================================
-uploaded_file = st.file_uploader("Upload Excel File", type=["xlsx", "csv"])
+@st.cache_data
+def get_dashboard_data(filepath):
+    """
+    قراءة البيانات وتخزينها مؤقتاً في الذاكرة لتجنب إعادة التحميل المستمر.
+    """
+    if not os.path.exists(filepath):
+        return None
+    return utils.load_and_clean_data(filepath)
 
-if uploaded_file is not None:
-    df = utils.load_and_clean_data(uploaded_file)
-    missing_cols = utils.validate_columns(df)
-    if missing_cols:
-        st.error(f"Missing columns: {missing_cols}")
-        st.stop()
-else:
-    st.warning("Please upload a data file")
+# اسم ملف البيانات الافتراضي (تأكد من وجوده في نفس المجلد)
+DATA_FILE = "data.xlsx"
+
+df = get_dashboard_data(DATA_FILE)
+
+if df is None:
+    st.error(f"❌ لم يتم العثور على ملف البيانات: `{DATA_FILE}`")
+    st.info("الرجاء التأكد من رفع ملف البيانات ووضعه في نفس مجلد التطبيق.")
+    st.stop()
+
+missing_cols = utils.validate_columns(df)
+if missing_cols:
+    st.error(f"⚠️ أعمدة مفقودة في الملف: {missing_cols}")
     st.stop()
 
 # =========================================================
